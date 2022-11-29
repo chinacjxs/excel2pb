@@ -29,7 +29,7 @@ excel2pb.exe --input-dir ./xlsx
 
 ### 命令行参数
 
-+ [**Required**] `--input-dir DIR` 指定Excel文件目录，目录下所有的***.xlsx**文件都将被解析
++ [**Required**] `--input-dir DIR` 指定Excel文件目录，目录下所有的 `.xlsx` 文件都将被解析
 
 + [Optional]  `--output-dir DIR` 指定导出数据目录，默认值等同于 `--input-dir`
 
@@ -37,10 +37,10 @@ excel2pb.exe --input-dir ./xlsx
 
 + [Optional]  `--proto-merge MERGED_NAME` 是否合并协议文件，默认不合并
 
-+ [Optional]  `--package-name PACKAGE_NAME`  指定消息包名，默认值`XlsxProtos`
++ [Optional]  `--package-name PACKAGE_NAME`  指定消息包名，默认值 `XlsxProtos`
 
-+ [Optional]  `--column-exclude COLUMNS` 指定忽略的列，默认为空，如需忽略多个列则用 **|**进行分割
++ [Optional]  `--column-exclude COLUMNS` 指定忽略的列，默认为空，如需忽略多个列则用 `|` 进行分割
 
-+ [Optional]  `--table-prefix PREFIX` 导出的表前缀，默认值 **st_** (StaticTable)
++ [Optional]  `--table-prefix PREFIX` 导出的表前缀，默认值 `st_` (StaticTable)
 
 + [Optional]  `--descriptor_set_out` 是否导出proto文件描述集，默认不导出

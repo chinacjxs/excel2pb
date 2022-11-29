@@ -99,8 +99,8 @@ namespace excel2pb
             {
                 string combinedProtoFilePath = Path.Combine(GlobalSetting.Instance.combiDir, GlobalSetting.Instance.mCombinedName + ".proto");
                 string combinedPbFilePath = null;
-                if (!string.IsNullOrEmpty(GlobalSetting.Instance.pbDir))
-                    combinedPbFilePath = Path.Combine(GlobalSetting.Instance.pbDir, GlobalSetting.Instance.mCombinedName + ".pb");
+                if (!string.IsNullOrEmpty(GlobalSetting.Instance.combiDir))
+                    combinedPbFilePath = Path.Combine(GlobalSetting.Instance.combiDir, GlobalSetting.Instance.mCombinedName + ".pb");
 
                 File.WriteAllText(combinedProtoFilePath, mCombinedBuilder.GetProto());
 

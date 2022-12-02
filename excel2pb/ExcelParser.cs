@@ -129,7 +129,7 @@ namespace excel2pb
                 if (!Const.ScalarValueTypes.Contains(columnValues[2]))
                     Utility.Exception(node.fileName, "<{0}> 发生错误 检查到无效的数据类型'{1}' 行号 {2} 列号 {3}", sheet.SheetName,columnValues[2],3, i + 1);
 
-                if (!Utility.IsValidNaming(columnValues[3]))
+                if (!Utility.IsLowerCamelCaseNaming(columnValues[3]))
                     Utility.Exception(node.fileName, "<{0}> 发生错误 检查到无效的字段名称'{1}' 行号 {2} 列号 {3}", sheet.SheetName,columnValues[3],4, i + 1);
 
                 if (result.FirstCellNum == -1)

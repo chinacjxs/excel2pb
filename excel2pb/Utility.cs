@@ -10,11 +10,6 @@ namespace excel2pb
     public static class Utility
     {
         /// <summary>
-        /// 小驼峰命名
-        /// </summary>
-        static readonly string CamelCasePattern = @"[a-z]+((\d)|([A-Z0-9][a-z0-9]+))*([A-Z])?";
-
-        /// <summary>
         /// 获取指定目录下的文件
         /// </summary>
         /// <param name="path"></param>
@@ -39,17 +34,15 @@ namespace excel2pb
         /// <summary>
         /// 打印日志
         /// </summary>
-        /// <param name="fileName"></param>
+        /// <param name="title"></param>
         /// <param name="format"></param>
         /// <param name="args"></param>
-        public static void Log(string fileName,string format = null, params object[] args)
+        public static void Log(string title,string format = null, params object[] args)
         {
             StringBuilder sb = new StringBuilder();
-            sb.Append(DateTime.Now.ToString());
-            if (!string.IsNullOrEmpty(fileName))
-                sb.AppendFormat(" [{0}] ", fileName);
-            else
-                sb.Append(" ");
+            sb.AppendFormat("{0} ", DateTime.Now.ToString());
+            if (!string.IsNullOrEmpty(title))
+                sb.AppendFormat("[{0}] ", title);
             sb.Append(string.Format(format == null ? string.Empty : format, args));
             Console.WriteLine(sb.ToString());
         }
@@ -57,16 +50,15 @@ namespace excel2pb
         /// <summary>
         /// 打印异常
         /// </summary>
-        /// <param name="fileName"></param>
+        /// <param name="title"></param>
         /// <param name="format"></param>
         /// <param name="args"></param>
-        public static void Exception(string fileName,string format = null,params object[] args)
+        public static void Exception(string title,string format = null,params object[] args)
         {
             StringBuilder sb = new StringBuilder();
-            sb.Append(DateTime.Now.ToString());
-            sb.Append(" ");
-            if (!string.IsNullOrEmpty(fileName))
-                sb.AppendFormat(" [{0}] ",fileName);
+            sb.AppendFormat("{0} ", DateTime.Now.ToString());
+            if (!string.IsNullOrEmpty(title))
+                sb.AppendFormat("[{0}] ",title);
             sb.AppendFormat(string.Format(format == null ? string.Empty : format, args));
             throw new Exception(sb.ToString());
         }
@@ -103,17 +95,27 @@ namespace excel2pb
         }
 
         /// <summary>
-        /// 验证命名合法性
+        /// 检测是否是小驼峰命名
         /// </summary>
         /// <param name="name"></param>
         /// <returns></returns>
-        public static bool IsValidNaming(string name)
+        public static bool IsLowerCamelCaseNaming(string name)
         {
             if (string.IsNullOrEmpty(name))
                 return false;
+            return Regex.IsMatch(name, Const.kLowerCamelCase);
+        }
 
-            Regex regex = new Regex(CamelCasePattern);
-            return regex.IsMatch(name);
+        /// <summary>
+        /// 检测是否是大驼峰命名
+        /// </summary>
+        /// <param name="name"></param>
+        /// <returns></returns>
+        public static bool IsUpperCamelCaseNaming(string name)
+        {
+            if (string.IsNullOrEmpty(name))
+                return false;
+            return Regex.IsMatch(name, Const.kUpperCamelCase);
         }
 
         /// <summary>
@@ -198,6 +200,25 @@ namespace excel2pb
             }
             else
                 return null;
+        }
+
+        public static string GetProtocStr(string importPath,string protoPath)
+        {
+            StringBuilder sb = new StringBuilder();
+
+            sb.AppendFormat(" --proto_path {0} ", importPath);
+            sb.AppendFormat(" --cpp_out {0} ","");
+            sb.AppendFormat(" --csharp_out {0} ", "");
+            sb.AppendFormat(" --java_out {0} ", "");
+            sb.AppendFormat(" --js_out {0} ", "");
+            sb.AppendFormat(" --kotlin_out {0} ", "");
+            sb.AppendFormat(" --objc_out {0} ", "");
+            sb.AppendFormat(" --php_out {0} ", "");
+            sb.AppendFormat(" --python_out {0} ", "");
+            sb.AppendFormat(" --ruby_out {0} ", "");
+
+            sb.AppendFormat(" {0} ",protoPath);
+            return sb.ToString();
         }
     }
 }

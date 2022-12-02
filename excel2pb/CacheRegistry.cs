@@ -4,14 +4,16 @@ using System.IO;
 namespace excel2pb
 {
     /// <summary>
-    /// 缓存注册
+    /// 缓存管理
     /// </summary>
     public class CacheRegistry : Singleton<CacheRegistry>
     {
+        CacheRegistry() { }
+
         /// <summary>
-        /// 内部缓存条目
+        /// 缓存记录
         /// </summary>
-        class InternalCached
+        class CacheRecord
         {
             public string key;
 
@@ -30,14 +32,12 @@ namespace excel2pb
             }
         }
 
-        Dictionary<string, InternalCached> CachedAll = new Dictionary<string, InternalCached>();
-
         const string kStrFileName = "__cached.txt";
 
-        CacheRegistry() { }
+        Dictionary<string, CacheRecord> records = new Dictionary<string, CacheRecord>();
 
         /// <summary>
-        /// 初始化 加载本地缓存
+        /// 初始化 加载缓存
         /// </summary>
         public void Initialize()
         {
@@ -48,42 +48,42 @@ namespace excel2pb
                 {
                     while (!reader.EndOfStream)
                     {
-                        var item = new InternalCached();
+                        var item = new CacheRecord();
                         item.Deserialize(reader);
-                        CachedAll.Add(item.key, item);
+                        records.Add(item.key, item);
                     }
                 }
             }
         }
 
         /// <summary>
-        /// 检测是否比缓存数据新
+        /// 检测是否是最新记录
         /// </summary>
         /// <param name="key"></param>
         /// <param name="md5"></param>
         /// <returns></returns>
         public bool IsNewest(string key,string md5)
         {
-            if(CachedAll.TryGetValue(key,out InternalCached item))
+            if(records.TryGetValue(key,out CacheRecord item))
                 return item.md5 != md5;
             return true;
         }
 
         /// <summary>
-        /// 更新最新的数据
+        /// 更新记录
         /// </summary>
         /// <param name="key"></param>
         /// <param name="md5"></param>
         public void ApplyNewest(string key,string md5)
         {
-            if (CachedAll.TryGetValue(key, out InternalCached item))
+            if (records.TryGetValue(key, out CacheRecord item))
                 item.md5 = md5;
             else
-                CachedAll.Add(key, new InternalCached() { key = key,md5 = md5 });
+                records.Add(key, new CacheRecord() { key = key,md5 = md5 });
         }
 
         /// <summary>
-        /// 根据最新的数据清除无效缓存
+        /// 清除无效记录
         /// </summary>
         /// <param name="newest"></param>
         /// <returns></returns>
@@ -91,27 +91,27 @@ namespace excel2pb
         {
             List<string> removal = new List<string>();
             HashSet<string> hashSet = new HashSet<string>(newest);
-            foreach (var item in CachedAll.Keys)
+            foreach (var item in records.Keys)
             {
                 if (!hashSet.Contains(item))
                     removal.Add(item);
             }
 
             foreach (var item in removal)
-                CachedAll.Remove(item);
+                records.Remove(item);
 
             return removal;
         }
 
         /// <summary>
-        /// 保存缓存数据到文件中
+        /// 保存到文件
         /// </summary>
         public void Save()
         {
             string path = Path.Combine(GlobalSetting.Instance.outputDir, kStrFileName);
             using (StreamWriter writer = File.CreateText(path))
             {
-                foreach (var item in CachedAll.Values)
+                foreach (var item in records.Values)
                     item.Serialize(writer);
             }
         }

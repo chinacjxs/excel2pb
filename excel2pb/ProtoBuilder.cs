@@ -25,44 +25,20 @@ namespace excel2pb
         public string Name;
     }
 
+    /// <summary>
+    /// Proto Builder
+    /// </summary>
     public class ProtoBuilder
     {
-        readonly string headers = null;
-        readonly string indention = "    ";
-        readonly StringBuilder sb = new StringBuilder();
+        const string kStrIndention = "    ";
+        StringBuilder m_ProtoHeader = new StringBuilder();
+        StringBuilder m_ProtoBody = new StringBuilder();
 
         public ProtoBuilder()
         {
-            headers = "syntax = \"proto3\";\n";
+            m_ProtoHeader.AppendLine("syntax = \"proto3\";");
             if (!string.IsNullOrEmpty(GlobalSetting.Instance.mPackageName))
-                headers += string.Format("package {0};\n", GlobalSetting.Instance.mPackageName);
-        }
-
-        /// <summary>
-        /// 清空
-        /// </summary>
-        public void Clear()
-        {
-            sb.Clear();
-        }
-        
-        /// <summary>
-        /// 消息开始
-        /// </summary>
-        /// <param name="messageName"></param>
-        void BeginMessage(string messageName)
-        {
-            sb.Append("message ");
-            sb.Append(messageName);
-            sb.Append("\n{");
-        }
-
-        /// <summary>
-        /// 消息结束
-        /// </summary>
-        void EndMessage()
-        {
-            sb.Append("\n}\n");
+                m_ProtoHeader.AppendFormat("package {0};\n",GlobalSetting.Instance.mPackageName);
         }
 
         /// <summary>
@@ -79,7 +55,7 @@ namespace excel2pb
                     isAvailable = true;
 
                 if (isAvailable)
-                    sb.AppendLine(lines[i]);
+                    m_ProtoBody.AppendLine(lines[i]);
             }
         }
 
@@ -90,9 +66,7 @@ namespace excel2pb
         /// <param name="field"></param>
         public void NewMessage(string messageName, ProtoField field)
         {
-            BeginMessage(messageName);
-            NewField(1, field);
-            EndMessage();
+            NewMessage(messageName, new ProtoField[] { field });
         }
 
         /// <summary>
@@ -110,20 +84,57 @@ namespace excel2pb
         }
 
         /// <summary>
-        /// 添加消息
-        /// </summary>
-        /// <param name="message"></param>
-        public void Append(string message)
-        {
-            sb.Append(message);
-        }
-
-        /// <summary>
         /// 新建行
         /// </summary>
         public void NewLine()
         {
-            sb.AppendLine();
+            m_ProtoBody.AppendLine();
+        }
+
+        /// <summary>
+        /// 获取完整协议
+        /// </summary>
+        /// <returns></returns>
+        public string GetProto()
+        {
+            return string.Format("{0}\n{1}", m_ProtoHeader.ToString(), m_ProtoBody.ToString());
+        }
+
+        /// <summary>
+        /// 获取消息
+        /// </summary>
+        /// <returns></returns>
+        public string GetBody()
+        {
+            return m_ProtoBody.ToString();
+        }
+
+        /// <summary>
+        /// 清空
+        /// </summary>
+        public void Clear()
+        {
+            m_ProtoBody.Clear();
+        }
+        
+        /// <summary>
+        /// 消息开始
+        /// </summary>
+        /// <param name="messageName"></param>
+        void BeginMessage(string messageName)
+        {
+            m_ProtoBody.Append("\n");
+            m_ProtoBody.Append("message ");
+            m_ProtoBody.Append(messageName);
+            m_ProtoBody.Append("\n{");
+        }
+
+        /// <summary>
+        /// 消息结束
+        /// </summary>
+        void EndMessage()
+        {
+            m_ProtoBody.Append("\n}");
         }
 
         /// <summary>
@@ -135,7 +146,7 @@ namespace excel2pb
         /// <param name="rule"></param>
         void NewField(int index, string type,string name,string rule)
         {
-            sb.AppendFormat("\n{0}{1} {2} {3} = {4};", indention,rule,type,name,index);
+            m_ProtoBody.AppendFormat("\n{0}{1} {2} {3} = {4};", kStrIndention,rule,type,name,index);
         }
 
         /// <summary>
@@ -146,24 +157,6 @@ namespace excel2pb
         void NewField(int index,ProtoField field)
         {
             NewField(index, field.Type, field.Name, field.Rule);
-        }
-
-        /// <summary>
-        /// 获取完整协议
-        /// </summary>
-        /// <returns></returns>
-        public string GetProto()
-        {
-            return string.Format("{0}\n{1}\n",headers,sb.ToString());
-        }
-
-        /// <summary>
-        /// 获取消息
-        /// </summary>
-        /// <returns></returns>
-        public string GetMessage()
-        {
-            return sb.ToString();
         }
     }
 }

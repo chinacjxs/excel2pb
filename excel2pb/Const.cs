@@ -17,7 +17,8 @@ namespace excel2pb
         /// <summary>
         /// 有效字段类型
         /// </summary>
-        public static readonly HashSet<string> ScalarValueTypes = new HashSet<string>() {
+        public static readonly HashSet<string> ScalarValueTypes = new HashSet<string>()
+        {
             "double",
             "float",
             "int32",
@@ -44,5 +45,15 @@ namespace excel2pb
             "optional",
             "repeated",
         };
+
+        /// <summary>
+        /// 小驼峰命名
+        /// </summary>
+        public const string kLowerCamelCase = @"[a-z]+((\d)|([A-Z0-9][a-z0-9]+))*([A-Z])?";
+
+        /// <summary>
+        /// 大驼峰命名
+        /// </summary>
+        public const string kUpperCamelCase = @"([A-Z][a-z0-9]+)((\d)|([A-Z0-9][a-z0-9]+))*([A-Z])?";
     }
 }

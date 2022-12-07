@@ -66,7 +66,7 @@ namespace excel2pb
 
                     sw2.Restart();
                     Utility.Log(item.fileName, "开始序列化文件数据");
-                    string[] csharpFilePaths = Utility.GetFiles(csharpFilePath, (p) =>
+                    FileInfo[] csharpFilePaths = Utility.GetFiles(csharpFilePath, (p) =>
                     {
                         if (p.Extension.ToLower() == ".cs")
                             return true;
@@ -75,7 +75,7 @@ namespace excel2pb
 
                     List<string> csharpCodes = new List<string>();
                     foreach (var csFilePath in csharpFilePaths)
-                        csharpCodes.Add(File.ReadAllText(csFilePath));
+                        csharpCodes.Add(File.ReadAllText(csFilePath.FullName));
                     DynamicClassLoader.Compile(item.tableName, csharpCodes);
 
                     string fullClassName = GlobalSetting.Instance.GetFullClassName(item.tableName);
@@ -131,7 +131,7 @@ namespace excel2pb
         {
             List<ExcelProcessNode> nodes = new List<ExcelProcessNode>();
 
-            string[] paths = Utility.GetFiles(GlobalSetting.Instance.inputDir,(p)=> {
+            FileInfo[] paths = Utility.GetFiles(GlobalSetting.Instance.inputDir,(p)=> {
                 if (p.Extension.ToLower() == ".xlsx" &&
                   (p.Attributes & FileAttributes.Hidden) != FileAttributes.Hidden)
                     return true;
@@ -142,9 +142,9 @@ namespace excel2pb
 
             foreach (var path in paths)
             {
-                string md5 = Utility.GetFileMd5(path);
-                string fileName = Path.GetFileName(path);
-                string tableName = GlobalSetting.Instance.GetTableName(path);
+                string md5 = Utility.GetFileMd5(path.FullName);
+                string fileName = Path.GetFileName(path.Name);
+                string tableName = GlobalSetting.Instance.GetTableName(path.Name);
 
                 if (vs.Contains(tableName))
                     Utility.Exception(fileName, "发生错误 检查到重复文件名");
@@ -153,7 +153,7 @@ namespace excel2pb
                 nodes.Add(new ExcelProcessNode()
                 {
                     md5 = md5,
-                    filePath = path,
+                    filePath = path.FullName,
                     fileName = fileName,
                     tableName = tableName,
                 });

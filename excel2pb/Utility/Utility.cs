@@ -15,9 +15,9 @@ namespace excel2pb
         /// <param name="path"></param>
         /// <param name="filter"></param>
         /// <returns></returns>
-        public static string[] GetFiles(string path,Func<FileInfo,bool> filter)
+        public static FileInfo[] GetFiles(string path,Func<FileInfo,bool> filter)
         {
-            List<string> ret = new List<string>();
+            List<FileInfo> ret = new List<FileInfo>();
             DirectoryInfo directoryInfo = new DirectoryInfo(path);
             if (directoryInfo.Exists)
             {
@@ -25,7 +25,7 @@ namespace excel2pb
                 foreach (var file in fileInfos)
                 {
                     if (filter == null || filter(file))
-                        ret.Add(file.FullName);
+                        ret.Add(file);
                 }
             }
             return ret.ToArray();

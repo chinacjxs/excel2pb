@@ -52,6 +52,9 @@
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <ItemGroup>
+    <Reference Include="DotLiquid, Version=2.2.663.0, Culture=neutral, PublicKeyToken=82e46016ecf9f07c, processorArchitecture=MSIL">
+      <HintPath>..\packages\DotLiquid.2.2.663\lib\net45\DotLiquid.dll</HintPath>
+    </Reference>
     <Reference Include="Google.Protobuf, Version=3.21.9.0, Culture=neutral, PublicKeyToken=a7d26565bac4d604, processorArchitecture=MSIL">
       <HintPath>..\packages\Google.Protobuf.3.21.9\lib\net45\Google.Protobuf.dll</HintPath>
     </Reference>
@@ -115,16 +118,21 @@
     <Compile Include="AppMain.cs" />
     <Compile Include="CacheRegistry.cs" />
     <Compile Include="CommandLineArgumentParser.cs" />
+    <Compile Include="Common\Column.cs" />
+    <Compile Include="Common\Row.cs" />
+    <Compile Include="Common\Table.cs" />
     <Compile Include="Const.cs" />
-    <Compile Include="DynamicClassLoader.cs" />
     <Compile Include="ExcelParser.cs" />
     <Compile Include="GlobalSetting.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="ProtoBuilder.cs" />
-    <Compile Include="ProtocRunner.cs" />
-    <Compile Include="Singleton.cs" />
-    <Compile Include="Utility.cs" />
+    <Compile Include="Protobuf\ProtoBuilder.cs" />
+    <Compile Include="Protobuf\ProtocRunner.cs" />
+    <Compile Include="Render\IRender.cs" />
+    <Compile Include="Render\RenderTemplateManager.cs" />
+    <Compile Include="Utility\DynamicClassLoader.cs" />
+    <Compile Include="Utility\Singleton.cs" />
+    <Compile Include="Utility\Utility.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="App.config">
@@ -148,6 +156,7 @@
     <Analyzer Include="..\packages\Microsoft.CodeAnalysis.Analyzers.3.3.3\analyzers\dotnet\cs\Microsoft.CodeAnalysis.Analyzers.dll" />
     <Analyzer Include="..\packages\Microsoft.CodeAnalysis.Analyzers.3.3.3\analyzers\dotnet\cs\Microsoft.CodeAnalysis.CSharp.Analyzers.dll" />
   </ItemGroup>
+  <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <Target Name="EnsureNuGetPackageBuildImports" BeforeTargets="PrepareForBuild">
     <PropertyGroup>
